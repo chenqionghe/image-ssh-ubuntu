@@ -10,7 +10,8 @@ docker run --name ubuntu_ssh -p 2222:22 -d chenqionghe/ubuntu
 ```
 * 连接
 ```
-ssh
+ssh root@127.0.0.1 -p 2222
+#输出密码
 ```
 
 
