@@ -14,12 +14,15 @@ echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted 
 echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse" >> /etc/apt/sources.list
 
 #安装openssh-server
-RUN apt-get -y update && apt-get -y upgrade && apt-get install -y openssh-server python vim curl
+RUN apt-get -y update && apt-get -y upgrade && apt-get install -y openssh-server
+
 #修改默认密码
 RUN echo 'root:88888888' | chpasswd
 RUN mkdir -p /run/sshd
 # 允许登录
 RUN sed -i "s/#PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
+
+RUN  apt-get install -y python vim curl
 
 CMD /usr/sbin/sshd -D && tail -f /var/log/wtmp
 
