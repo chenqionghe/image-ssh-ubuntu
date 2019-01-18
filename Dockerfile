@@ -23,3 +23,4 @@ RUN sed -i "s/#PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
 
 CMD /usr/sbin/sshd -D && tail -f /var/log/wtmp
 
+
