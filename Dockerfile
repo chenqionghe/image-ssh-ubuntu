@@ -16,7 +16,7 @@ echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted
 #安装openssh-server
 RUN apt-get -y update && apt-get -y upgrade && apt-get install -y openssh-server
 #修改默认密码
-RUN echo 'root:lightWeightBaby!' | chpasswd
+RUN echo 'root:88888888' | chpasswd
 RUN mkdir -p /run/sshd
 # 允许登录
 RUN sed -i "s/#PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
