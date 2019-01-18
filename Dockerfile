@@ -1,14 +1,25 @@
-FROM centos
-RUN yum install -y wget && \
-wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo  && \
-yum install -y passwd && \
-yum install -y openssh-server  ssh-keygen && \
-echo 'lightWeightBaby!' | passwd root --stdin
-RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N "" -q && \
-ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N "" -q && \
-ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N "" -q
-#RUN systemctl enable sshd
-CMD /usr/sbin/sshd && tail -f /var/log/wtmp
+FROM ubuntu:18.04
 
+# Ali apt-get source.list
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
+echo "deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse" >> /etc/apt/sources.list && \
+echo "deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse" >> /etc/apt/sources.list && \
+echo "deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
+echo "deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse" >> /etc/apt/sources.list && \
+echo "deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
+echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse" >> /etc/apt/sources.list && \
+echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse" >> /etc/apt/sources.list && \
+echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
+echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse" >> /etc/apt/sources.list && \
+echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse" >> /etc/apt/sources.list
 
+#安装openssh-server
+RUN apt-get -y update && apt-get -y upgrade && apt-get install -y openssh-server
+#修改默认密码
+RUN echo 'root:lightWeightBaby!' | chpasswd
+RUN mkdir -p /run/sshd
+# 允许登录
+RUN sed -i "s/#PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
+
+CMD /usr/sbin/sshd -D && tail -f /var/log/wtmp
 
